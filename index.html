@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0b0b14" />
+  <title>Reylo AI — Free private AI chat in your browser</title>
+  <meta name="description" content="Reylo AI is a free, open-source AI chatbot that runs entirely in your browser. No API keys, no sign-up, no cost — real AI with WebGPU, plus instant math, code and knowledge tools." />
+  <meta property="og:title" content="Reylo AI — Free private AI chat in your browser" />
+  <meta property="og:description" content="Real AI chat that runs 100% on your device. No API keys, no sign-up, free forever." />
+  <meta property="og:image" content="images/og-card.png" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/png" href="images/logo.png" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="app">
+    <!-- ======================= Sidebar ======================= -->
+    <aside class="sidebar" id="sidebar" aria-label="Conversations">
+      <div class="brand">
+        <img src="images/logo.png" alt="Reylo AI logo" class="brand-logo" />
+        <div class="brand-text">
+          <span class="brand-name">Reylo<span class="brand-accent"> AI</span></span>
+          <span class="brand-tag">free · private · keyless</span>
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-block" id="newChatBtn" type="button">
+        <svg viewBox="0 0 24 24" class="icon"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        New chat
+      </button>
+
+      <nav class="chat-list" id="chatList" aria-label="Chat history"></nav>
+
+      <div class="sidebar-foot">
+        <a class="side-link" href="https://github.com/DarthJarJar345/Reylo" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" class="icon"><path fill="currentColor" d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.2.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.1 4.6 18.1 5 18.1 5c.7 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .4.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
+          Source code
+        </a>
+        <button class="side-link" id="exportBtn" type="button">
+          <svg viewBox="0 0 24 24" class="icon"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 21h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Export chat
+        </button>
+        <button class="side-link" id="settingsBtn" type="button">
+          <svg viewBox="0 0 24 24" class="icon"><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-2.9-1.2l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.2-2.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 2.9-1.2V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5.9z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+          Settings
+        </button>
+      </div>
+    </aside>
+
+    <!-- ======================= Main ======================= -->
+    <main class="main">
+      <header class="topbar">
+        <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Toggle sidebar">
+          <svg viewBox="0 0 24 24" class="icon"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <div class="engine-pill" id="enginePill" title="Current engine">
+          <span class="pill-dot" id="pillDot"></span>
+          <span id="pillText">Reylo Core · instant</span>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn btn-ghost btn-sm" id="neuralToggle" type="button">
+            <svg viewBox="0 0 24 24" class="icon"><path d="M12 3a5 5 0 0 1 5 5c0 1.4-.6 2.6-1.5 3.5.6.8 1 1.8 1 2.9a5.5 5.5 0 0 1-11 0c0-1.1.4-2.1 1-2.9A5 5 0 0 1 12 3z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 8v8M9 12h6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            <span id="neuralToggleText">Enable Neural AI</span>
+          </button>
+        </div>
+      </header>
+
+      <div class="progress-wrap" id="progressWrap" hidden>
+        <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+        <div class="progress-label" id="progressLabel"></div>
+      </div>
+
+      <section class="messages" id="messages" aria-live="polite">
+        <!-- Welcome hero (shown when chat empty) -->
+        <div class="welcome" id="welcome">
+          <img src="images/logo.png" alt="" class="welcome-orb" />
+          <h1>Hey — I'm <span class="grad-text">Reylo AI</span></h1>
+          <p class="welcome-sub">
+            Free, open-source AI chat that runs <strong>entirely in your browser</strong>.<br />
+            No API keys · No sign-up · No cost · Your chats never leave your device.
+          </p>
+          <div class="suggestions" id="suggestions">
+            <button class="chip" type="button">What is machine learning?</button>
+            <button class="chip" type="button">(18 + 4) * 3^2</button>
+            <button class="chip" type="button">Convert 72 f to c</button>
+            <button class="chip" type="button">Write code for fibonacci in python</button>
+            <button class="chip" type="button">How does Reylo work with no API keys?</button>
+            <button class="chip" type="button">Tell me a fun fact</button>
+          </div>
+          <div class="engine-cards">
+            <div class="engine-card">
+              <div class="engine-card-head"><span class="ec-icon">⚡</span> Reylo Core</div>
+              <p>Instant toolkit engine — math, conversions, code recipes, knowledge, text tools. Works offline, zero download.</p>
+              <span class="ec-status active">Active now</span>
+            </div>
+            <div class="engine-card">
+              <div class="engine-card-head"><span class="ec-icon">🧠</span> Reylo Neural</div>
+              <p>A real language model (Qwen 2.5 / SmolLM2) downloaded to your device and run with WebGPU. One-time download.</p>
+              <button class="btn btn-secondary btn-sm" id="welcomeNeuralBtn" type="button">Turn on Neural</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================= Composer ======================= -->
+      <footer class="composer-wrap">
+        <div class="composer">
+          <textarea id="input" rows="1" placeholder="Message Reylo AI… (Shift+Enter for a new line)" aria-label="Message"></textarea>
+          <div class="composer-actions">
+            <span class="composer-hint" id="composerHint">Core engine — instant answers</span>
+            <button class="btn btn-ghost btn-sm stop-btn" id="stopBtn" type="button" hidden>
+              <svg viewBox="0 0 24 24" class="icon"><rect x="7" y="7" width="10" height="10" rx="2" fill="currentColor"/></svg>
+              Stop
+            </button>
+            <button class="send-btn" id="sendBtn" type="button" aria-label="Send message">
+              <svg viewBox="0 0 24 24" class="icon"><path d="M4 12 20 4l-8 16-2-6-6-2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+        <p class="disclaimer">Reylo AI can make mistakes — verify important information. Everything runs locally on your device.</p>
+      </footer>
+    </main>
+  </div>
+
+  <!-- ======================= Settings modal ======================= -->
+  <div class="modal-backdrop" id="modalBackdrop" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+      <div class="modal-head">
+        <h2 id="settingsTitle">Settings</h2>
+        <button class="icon-btn" id="closeSettings" type="button" aria-label="Close">
+          <svg viewBox="0 0 24 24" class="icon"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+
+      <div class="setting-group">
+        <label class="setting-label">Engine</label>
+        <div class="segmented" id="engineSeg">
+          <button class="seg-btn active" data-engine="core" type="button">⚡ Core</button>
+          <button class="seg-btn" data-engine="neural" type="button">🧠 Neural</button>
+        </div>
+        <p class="setting-help">Core is instant and offline. Neural downloads a real LLM to your device (first use only, then cached).</p>
+      </div>
+
+      <div class="setting-group" id="modelGroup">
+        <label class="setting-label" for="modelSelect">Neural model</label>
+        <select id="modelSelect" class="select">
+          <option value="onnx-community/Qwen2.5-0.5B-Instruct">Qwen 2.5 0.5B — Smart · ~350 MB</option>
+          <option value="onnx-community/SmolLM2-360M-Instruct">SmolLM2 360M — Balanced · ~200 MB</option>
+          <option value="onnx-community/SmolLM2-135M-Instruct">SmolLM2 135M — Turbo · ~75 MB</option>
+        </select>
+      </div>
+
+      <div class="setting-group">
+        <label class="setting-label" for="tempRange">Creativity <span class="value-badge" id="tempValue">0.7</span></label>
+        <input type="range" id="tempRange" min="0" max="1.2" step="0.1" value="0.7" />
+        <p class="setting-help">Lower = focused and deterministic. Higher = more creative (Neural engine only).</p>
+      </div>
+
+      <div class="setting-group">
+        <label class="setting-label">Data</label>
+        <div class="row-gap">
+          <button class="btn btn-secondary btn-sm" id="exportBtn2" type="button">Export current chat (.md)</button>
+          <button class="btn btn-danger btn-sm" id="clearAllBtn" type="button">Delete all chats</button>
+        </div>
+        <p class="setting-help">Chats are stored only in this browser's local storage. There is no server.</p>
+      </div>
+
+      <div class="about-box">
+        <strong>Reylo AI</strong> · open source (MIT) · built with vanilla JS,
+        <a href="https://github.com/huggingface/transformers.js" target="_blank" rel="noopener">Transformers.js</a>, and WebGPU.
+        <a href="https://github.com/DarthJarJar345/Reylo" target="_blank" rel="noopener">View on GitHub →</a>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
